@@ -10,6 +10,8 @@ export class TimePickerCore extends React.Component {
         this.state = {
             selectedHourIndex: 0,
             selectedMinuteIndex: 0,
+            hourClickSelected: false,
+            minClickSelected: false,
             currentTime: moment(),
         }
         this.handleClickOutside = this.handleClickOutside.bind(this)
@@ -51,21 +53,35 @@ export class TimePickerCore extends React.Component {
     }
 
     setselectedHourIndex(val) {
-        this.setState({ selectedHourIndex: val })
+        if (this.state.minClickSelected) {
+            this.handleConfirm(val, this.state.selectedMinuteIndex)
+        } else {
+            this.setState({
+                selectedHourIndex: val,
+                hourClickSelected: true,
+            })
+        }
     }
 
     setselectedMinuteIndex(val) {
-        this.setState({ selectedMinuteIndex: val })
+        if (this.state.hourClickSelected) {
+            this.handleConfirm(this.state.selectedHourIndex, val)
+        } else {
+            this.setState({
+                selectedMinuteIndex: val,
+                minClickSelected: true,
+            })
+        }
     }
 
-    handleConfirm(addMinutes) {
-        if (addMinutes) {
-            this.state.currentTime.add(addMinutes, 'm')
-            this.props.onChange(this.state.currentTime.format('HH:mm'))
-        } else {
-            this.props.onChange(this.state.selectedHourIndex + ':' + ((this.state.selectedMinuteIndex) * 5))
-        }
-        // Close the timepicker
+    addMinutes(mins) {
+        this.state.currentTime.add(mins, 'm')
+        this.props.onChange(this.state.currentTime.format('HH:mm'))
+        this.props.onCancel()
+    }
+
+    handleConfirm(hour, minute) {
+        this.props.onChange(hour + ':' + (minute * 5))
         this.props.onCancel()
     }
 
@@ -83,9 +99,9 @@ export class TimePickerCore extends React.Component {
                         <table>
                             <tbody>
                                 <tr>
-                                    <td><button className="btn btn--mini" type="button" onClick={this.handleConfirm.bind(this, 30)}>in 30 min</button></td>
-                                    <td><button className="btn btn--mini" type="button" onClick={this.handleConfirm.bind(this, 60)}>in 1 h</button></td>
-                                    <td><button className="btn btn--mini" type="button" onClick={this.handleConfirm.bind(this, 120)}>in 2 h</button></td>
+                                    <td><button className="btn btn--mini" type="button" onClick={this.addMinutes.bind(this, 30)}>in 30 min</button></td>
+                                    <td><button className="btn btn--mini" type="button" onClick={this.addMinutes.bind(this, 60)}>in 1 h</button></td>
+                                    <td><button className="btn btn--mini" type="button" onClick={this.addMinutes.bind(this, 120)}>in 2 h</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -107,7 +123,6 @@ export class TimePickerCore extends React.Component {
                         </ul>
                     </div>
                     <div>
-                        <button className="btn btn--primary btn--small pull-right" type="button" onClick={this.handleConfirm.bind(this, 0)}>Confirm</button>
                         <button className="btn btn--small pull-right" type="button" onClick={this.handleCancel.bind(this)}>Cancel</button>
                     </div>
                 </div>

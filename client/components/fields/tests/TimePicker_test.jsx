@@ -64,16 +64,23 @@ describe('<TimePicker />', () => {
         expect(minList.children().length).toBe(12)  // 12 as minutes displayed are 5 minutes apart
     })
 
-    it('can manually select hours and minutes', () => {
+    it('can manually select hours', () => {
         const wrapper = mount(<TestForm placeholder='Time' onChange={() => {}}/>)
         wrapper.find('.timepickerInput--btn').simulate('click')
         const selectAreas = wrapper.find('ul')
         const hoursList = selectAreas.at(0)
-        const minList = selectAreas.at(1)
         hoursList.childAt(14).simulate('click')
-        minList.childAt(6).simulate('click')
         const activeButtons = wrapper.find('.active')
         expect(activeButtons.get(0).textContent).toBe('14')
+    })
+
+    it('can manually select mins', () => {
+        const wrapper = mount(<TestForm placeholder='Time' onChange={() => {}}/>)
+        wrapper.find('.timepickerInput--btn').simulate('click')
+        const selectAreas = wrapper.find('ul')
+        const minList = selectAreas.at(1)
+        minList.childAt(6).simulate('click')
+        const activeButtons = wrapper.find('.active')
         expect(activeButtons.get(1).textContent).toBe('30')
     })
 
@@ -81,7 +88,7 @@ describe('<TimePicker />', () => {
         const wrapper = mount(<TestForm placeholder='Time' onChange={() => {}}/>)
         wrapper.find('.timepickerInput--btn').simulate('click')
         expect(wrapper.find('.timepickerPopup').length).toBe(1)
-        const cancelBtn = wrapper.find('.btn--small').at(1)
+        const cancelBtn = wrapper.find('.btn--small').at(0)
         cancelBtn.simulate('click')
         expect(wrapper.find('.timepickerPopup').length).toBe(0)
     })
@@ -98,8 +105,6 @@ describe('<TimePicker />', () => {
         const minList = selectAreas.at(1)
         hoursList.childAt(14).simulate('click')
         minList.childAt(6).simulate('click')
-        const submitButton = wrapper.find('.btn--primary').at(0)
-        submitButton.simulate('click')
         expect(onChange.calledOnce).toBe(true)
     })
 })
