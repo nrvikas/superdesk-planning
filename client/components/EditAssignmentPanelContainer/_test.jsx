@@ -5,7 +5,7 @@ import { EditAssignmentPanelContainer } from './index'
 import { Provider } from 'react-redux'
 import sinon from 'sinon'
 import moment from 'moment'
-import { restoreSinonStub } from '../../utils/testUtils'
+import { restoreSinonStub, itemActionExists } from '../../utils/testUtils'
 import assignmentsUi from '../../actions/assignments/ui'
 
 describe('<EditAssignmentPanelContainer />', () => {
@@ -96,5 +96,35 @@ describe('<EditAssignmentPanelContainer />', () => {
         expect(store.getState().assignment.previewOpened).toBe(false)
         expect(wrapper.find('.icon-pencil').length).toBe(1)
         expect(wrapper.find('.btn--primary').length).toBe(0)
+    })
+
+    it('can Complete an assignment in_progress', () => {
+
+        initialState.assignment.assignments['1'].assigned_to.state = 'in_progress'
+        const store = createTestStore({ initialState })
+        const wrapper = getWrapper(store)
+        store.dispatch(assignmentsUi.preview(initialState.assignment.assignments[1]))
+
+        expect(wrapper.find('.icon-pencil').length).toBe(1)
+        expect(wrapper.find('.btn--primary').length).toBe(0)
+        wrapper.find('.icon-pencil').simulate('click')
+
+        expect(wrapper.find('ItemActionsMenu').props().actions.length).toBe(1)
+        expect(itemActionExists(wrapper, 'Complete Assignment')).toBe(true)
+    })
+
+    it('cannot Complete an assignment in any state other than in_progress', () => {
+
+        initialState.assignment.assignments['1'].assigned_to.state = 'assigned'
+        const store = createTestStore({ initialState })
+        const wrapper = getWrapper(store)
+        store.dispatch(assignmentsUi.preview(initialState.assignment.assignments[1]))
+
+        expect(wrapper.find('.icon-pencil').length).toBe(1)
+        expect(wrapper.find('.btn--primary').length).toBe(0)
+        wrapper.find('.icon-pencil').simulate('click')
+
+        expect(wrapper.find('ItemActionsMenu').props().actions).toBe(undefined)
+
     })
 })

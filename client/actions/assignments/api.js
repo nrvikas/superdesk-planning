@@ -130,11 +130,22 @@ const save = (item, original=undefined) => (
     )
 )
 
+const complete = (item) => (
+    (dispatch, getState, { api }) => (
+        api.update(
+            'assignments_complete',
+            item,
+            {}
+        )
+    )
+)
+
 const self = {
     query,
     receivedAssignments,
     fetchAssignmentById,
     save,
+    complete,
 }
 
 export default self

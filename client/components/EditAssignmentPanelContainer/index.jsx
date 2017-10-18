@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { isPristine, isValid, isSubmitting } from 'redux-form'
 import * as actions from '../../actions'
 import * as selectors from '../../selectors'
-import { AssignmentForm, AuditInformation } from '../../components'
+import { AssignmentForm, AuditInformation, ItemActionsMenu } from '../../components'
 import { TOOLTIPS } from '../../constants'
 import { getCreator, assignmentUtils } from '../../utils'
 import { get } from 'lodash'
@@ -53,6 +53,7 @@ export class EditAssignmentPanel extends React.Component {
             users,
             closePreview,
             openEditor,
+            completeAssignment,
             pristine,
             submitting,
         } = this.props
@@ -62,12 +63,23 @@ export class EditAssignmentPanel extends React.Component {
         const author = getCreator(assignment, 'original_creator', users)
         const versionCreator = getCreator(assignment, 'version_creator', users)
 
+        let itemActions
+        if (assignmentUtils.canCompleteAssignment(assignment)) {
+            itemActions = [
+                {
+                    label: 'Complete Assignment',
+                    icon: 'icon-ok',
+                    callback: () => { completeAssignment(assignment) },
+                },
+            ]
+        }
+
         return (
             <div className="EditAssignmentPanel">
                 <header className="subnav">
                     {readOnly &&
                         <div className="EditAssignmentPanel__actions">
-                            {!assignmentUtils.isAssignmentCancelled(assignment) &&
+                            {assignmentUtils.canEditAssignment(assignment) &&
                             <button className="EditAssignmentPanel__actions__edit navbtn navbtn--right"
                                 onClick={openEditor.bind(this, assignment)}
                                 data-sd-tooltip={TOOLTIPS.edit} data-flow='down'>
@@ -104,6 +116,7 @@ export class EditAssignmentPanel extends React.Component {
                             createdAt={creationDate}
                             updatedAt={updatedDate} />
                     </div>
+                    {!readOnly && <ItemActionsMenu actions={itemActions}/>}
                     <AssignmentForm
                         ref="AssignmentForm"
                         onSubmit={this.onSubmit.bind(this)}
@@ -128,6 +141,7 @@ EditAssignmentPanel.propTypes = {
     valid: PropTypes.bool.isRequired,
     save: PropTypes.func.isRequired,
     openCancelModal: PropTypes.func.isRequired,
+    completeAssignment: PropTypes.func,
 }
 
 const mapStateToProps = (state) => ({
@@ -144,6 +158,7 @@ const mapDispatchToProps = (dispatch) => (
         closePreview: () => dispatch(actions.assignments.ui.closePreview()),
         openEditor: (assignment) => dispatch(actions.assignments.ui.openEditor(assignment)),
         save: (assignment) => dispatch(actions.assignments.ui.save(assignment)),
+        completeAssignment: (assignment) => dispatch(actions.assignments.ui.complete(assignment)),
         openCancelModal: (actionCallback, ignoreCallBack) => dispatch(actions.showModal({
                 modalType: 'CONFIRMATION',
                 modalProps: {

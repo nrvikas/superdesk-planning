@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { Field, reduxForm, propTypes } from 'redux-form'
 import { CoverageDetails, EditAssignment } from '../../components'
 import * as selectors from '../../selectors'
-import { assignmentUtils } from '../../utils'
 import { get } from 'lodash'
 
 export class Component extends React.Component {
@@ -35,7 +34,7 @@ export class Component extends React.Component {
                         currentUserId={currentUserId}
                         desks={desks}
                         coverageProviders={coverageProviders}
-                        readOnly={readOnly || assignmentUtils.isAssignmentCancelled(assignment)} context={'assignment'} />
+                        readOnly={readOnly} context={'assignment'} />
 
                     <label>Coverage Details</label>
                     <CoverageDetails
