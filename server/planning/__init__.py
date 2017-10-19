@@ -217,6 +217,9 @@ def init_app(app):
         service=assignments_complete_service
     )
 
+    app.on_updated_archive += assignments_publish_service.update_assignment_on_archive_update
+    app.on_archive_item_updated += assignments_publish_service.update_assignment_on_archive_send
+
     register_component(LockService(app))
 
     superdesk.privilege(

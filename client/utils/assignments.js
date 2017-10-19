@@ -11,10 +11,15 @@ const canEditAssignment = (assignment) =>
     (!isAssignmentCancelled(assignment) &&
         get(assignment, 'assigned_to.state') !== ASSIGNMENTS.WORKFLOW_STATE.COMPLETED)
 
+const canEditAssignedTo = (assignment) =>
+    (canEditAssignment(assignment) &&
+        get(assignment, 'assigned_to.state') !== ASSIGNMENTS.WORKFLOW_STATE.IN_PROGRESS)
+
 const self = {
     isAssignmentCancelled,
     canCompleteAssignment,
     canEditAssignment,
+    canEditAssignedTo,
 }
 
 export default self
