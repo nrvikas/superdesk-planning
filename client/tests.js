@@ -1,5 +1,6 @@
 import 'angular'
 import 'angular-mocks'
+import 'angular-gettext'
 
 import './'
 
