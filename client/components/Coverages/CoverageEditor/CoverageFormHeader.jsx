@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {get} from 'lodash';
-import {getCreator, getItemInArrayById, gettext, planningUtils} from '../../../utils';
+import {itemUtils, gettext, planningUtils} from '../../../utils';
 import {WORKSPACE} from '../../../constants';
 import {Item, Border, Column, Row as ListRow} from '../../UI/List';
 import {Button} from '../../UI';
@@ -33,8 +33,8 @@ export class CoverageFormHeader extends React.Component {
             currentWorkspace
         } = this.props;
 
-        const userAssigned = getCreator(value, 'assigned_to.user', users);
-        const deskAssigned = getItemInArrayById(desks, get(value, 'assigned_to.desk'));
+        const userAssigned = itemUtils.getCreator(value, 'assigned_to.user', users);
+        const deskAssigned = itemUtils.getItemInArrayById(desks, get(value, 'assigned_to.desk'));
         const coverageProvider = get(value, 'assigned_to.coverage_provider');
         const assignmentState = get(value, 'assigned_to.state');
 

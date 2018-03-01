@@ -5,7 +5,7 @@ import moment from 'moment';
 import {get, cloneDeep, remove as _remove, some, isEqual} from 'lodash';
 import * as selectors from '../../../selectors';
 
-import {gettext, getItemInArrayById, planningUtils, isSameItemId} from '../../../utils';
+import {gettext, itemUtils, planningUtils} from '../../../utils';
 
 import {ContentBlock} from '../../UI/SidePanel';
 import {
@@ -52,7 +52,7 @@ export class PlanningEditorComponent extends React.Component {
             }
         } else {
             // In add-to-planning modal
-            if (get(this.props, 'item._id') && !planningUtils.isLockedForAddToPlanning(this.props.item)) {
+            if (get(this.props, 'item._id') && !itemUtils.isLockedForAddToPlanning(this.props.item)) {
                 return;
             }
 
@@ -188,9 +188,9 @@ export class PlanningEditorComponent extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (isSameItemId(nextProps.item, this.props.item)) {
+        if (itemUtils.isSameItemId(nextProps.item, this.props.item)) {
             if (this.props.addNewsItemToPlanning) {
-                if (planningUtils.isLockedForAddToPlanning(nextProps.diff) &&
+                if (itemUtils.isLockedForAddToPlanning(nextProps.diff) &&
                     get(nextProps, 'item.coverages.length', 0) === get(nextProps, 'diff.coverages.length', 0)) {
                     let dupItem = cloneDeep(this.props.item);
 
@@ -235,7 +235,7 @@ export class PlanningEditorComponent extends React.Component {
 
     componentDidUpdate(prevProps) {
         // If item changed or it got locked for editing
-        if (!isSameItemId(prevProps.item, this.props.item) ||
+        if (!itemUtils.isSameItemId(prevProps.item, this.props.item) ||
             (!get(prevProps, 'diff.lock_user') && get(this.props, 'diff.lock_user'))) {
             this.dom.slugline.focus();
         }
@@ -281,7 +281,7 @@ export class PlanningEditorComponent extends React.Component {
         const enabledAgendas = agendas.filter((agenda) => get(agenda, 'is_enabled', true));
 
         const urgencyQcode = get(diff, 'urgency') || null;
-        const urgency = getItemInArrayById(urgencies, urgencyQcode, 'qcode');
+        const urgency = itemUtils.getItemInArrayById(urgencies, urgencyQcode, 'qcode');
         const existingPlanning = !!get(diff, '_id');
 
         // Read-only if

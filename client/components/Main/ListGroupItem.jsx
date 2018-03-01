@@ -6,7 +6,7 @@ import {EventItem, EventItemWithPlanning} from '../Events';
 import {PlanningItem} from '../Planning';
 
 import {ITEM_TYPE, EVENTS, PLANNING, MAIN} from '../../constants';
-import {getItemType, eventUtils} from '../../utils';
+import {itemUtils, eventUtils} from '../../utils';
 
 
 import '../../planning.scss';
@@ -67,7 +67,7 @@ export class ListGroupItem extends React.Component {
             users,
             desks,
         } = this.props;
-        const itemType = getItemType(item);
+        const itemType = itemUtils.getItemType(item);
 
         // If there is just singleClick, use it. Change it only if doubleClick is also defined.
         const clickHandler = onItemClick && onDoubleClick ? this.handleSingleAndDoubleClick :

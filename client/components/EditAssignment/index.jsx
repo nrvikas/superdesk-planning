@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {AssignmentSelect} from './AssignmentSelect';
 import {fields} from '../index';
-import {getItemInArrayById} from '../../utils';
+import {itemUtils} from '../../utils';
 import {ASSIGNMENTS} from '../../constants';
 import {StateLabel} from '../../components';
 import {get} from 'lodash';
@@ -36,7 +36,7 @@ export class EditAssignment extends React.Component {
             return;
         }
 
-        return getItemInArrayById(this.props.desks, this.props.input.value.desk);
+        return itemUtils.getItemInArrayById(this.props.desks, this.props.input.value.desk);
     }
 
     getAssignedUser() {
@@ -44,7 +44,7 @@ export class EditAssignment extends React.Component {
             return;
         }
 
-        return getItemInArrayById(this.props.users, this.props.input.value.user);
+        return itemUtils.getItemInArrayById(this.props.users, this.props.input.value.user);
     }
 
     onChange(value, toggle = true) {
@@ -82,8 +82,8 @@ export class EditAssignment extends React.Component {
             assigned_date_desk,
         } = get(this.props.input, 'value');
 
-        const deskAssignor = getItemInArrayById(this.props.users, assignor_desk);
-        const userAssignor = getItemInArrayById(this.props.users, assignor_user);
+        const deskAssignor = itemUtils.getItemInArrayById(this.props.users, assignor_desk);
+        const userAssignor = itemUtils.getItemInArrayById(this.props.users, assignor_user);
         const {context} = this.props;
 
         const assignmentSelectInput = {

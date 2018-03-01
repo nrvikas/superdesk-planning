@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {ITEM_TYPE, PRIVILEGES, KEYCODES, WORKSPACE} from '../../../constants';
-import {gettext, getItemType, eventUtils, planningUtils, isItemPublic, lockUtils, onEventCapture} from '../../../utils';
+import {gettext, eventUtils, planningUtils, itemUtils, lockUtils, onEventCapture} from '../../../utils';
 
 import {Button} from '../../UI';
 import {Button as NavButton} from '../../UI/Nav';
@@ -83,12 +83,12 @@ export class EditorHeader extends React.Component {
 
         // Do not show the tabs if we're creating a new item
         const existingItem = !!item;
-        const itemType = getItemType(item);
-        const isPublic = isItemPublic(item);
+        const itemType = itemUtils.getItemType(item);
+        const isPublic = itemUtils.isItemPublic(item);
         const itemLock = lockUtils.getLock(item, lockedItems);
         const inPlanning = currentWorkspace === WORKSPACE.PLANNING;
 
-        const isLockedInContext = !inPlanning ? planningUtils.isLockedForAddToPlanning(item) : !!itemLock;
+        const isLockedInContext = !inPlanning ? itemUtils.isLockedForAddToPlanning(item) : !!itemLock;
 
         let canPublish = false;
         let canUnpublish = false;

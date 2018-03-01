@@ -6,14 +6,8 @@ import {
     GENERIC_ITEM_ACTIONS,
 } from '../constants';
 import {
-    getItemWorkflowState,
+    itemUtils,
     lockUtils,
-    isItemSpiked,
-    isItemPublic,
-    getPublishedState,
-    isItemCancelled,
-    isItemRescheduled,
-    isItemPostponed,
     getDateTimeString,
     isEmptyActions,
     isDateInRange
@@ -144,11 +138,11 @@ const isEventIngested = (event) => (
 );
 
 const canSpikeEvent = (event, session, privileges, locks) => {
-    const eventState = getItemWorkflowState(event);
+    const eventState = itemUtils.getItemWorkflowState(event);
 
     return !isNil(event) &&
-        !isItemPublic(event) &&
-        (eventState === WORKFLOW_STATE.DRAFT || isEventIngested(event) || isItemPostponed(event)) &&
+        !itemUtils.isItemPublic(event) &&
+        (eventState === WORKFLOW_STATE.DRAFT || isEventIngested(event) || itemUtils.isItemPostponed(event)) &&
         !!privileges[PRIVILEGES.SPIKE_EVENT] &&
         !!privileges[PRIVILEGES.EVENT_MANAGEMENT] &&
         !isEventLockRestricted(event, session, locks) &&
@@ -158,58 +152,58 @@ const canSpikeEvent = (event, session, privileges, locks) => {
 
 const canUnspikeEvent = (event, privileges) => (
     !isNil(event) &&
-        isItemSpiked(event) &&
+        itemUtils.isItemSpiked(event) &&
         !!privileges[PRIVILEGES.UNSPIKE_EVENT] &&
         !!privileges[PRIVILEGES.EVENT_MANAGEMENT]
 );
 
 const canDuplicateEvent = (event, session, privileges, locks) => (
     !isNil(event) &&
-        !isItemSpiked(event) &&
+        !itemUtils.isItemSpiked(event) &&
         !isEventLockRestricted(event, session, locks) &&
         !!privileges[PRIVILEGES.EVENT_MANAGEMENT]
 );
 
 const canCreatePlanningFromEvent = (event, session, privileges, locks) => (
     !isNil(event) &&
-        !isItemSpiked(event) &&
+        !itemUtils.isItemSpiked(event) &&
         !!privileges[PRIVILEGES.PLANNING_MANAGEMENT] &&
         !isEventLockRestricted(event, session, locks) &&
-        !isItemCancelled(event) &&
-        !isItemRescheduled(event) &&
-        !isItemPostponed(event)
+        !itemUtils.isItemCancelled(event) &&
+        !itemUtils.isItemRescheduled(event) &&
+        !itemUtils.isItemPostponed(event)
 );
 
 const canPublishEvent = (event, session, privileges, locks) => (
     !isNil(event) &&
         !!get(event, '_id') &&
-        !isItemSpiked(event) &&
-        getPublishedState(event) !== PUBLISHED_STATE.USABLE &&
+        !itemUtils.isItemSpiked(event) &&
+        itemUtils.getPublishedState(event) !== PUBLISHED_STATE.USABLE &&
         !!privileges[PRIVILEGES.PUBLISH_EVENT] &&
         !isEventLockRestricted(event, session, locks) &&
-        !isItemCancelled(event) &&
-        !isItemRescheduled(event)
+        !itemUtils.isItemCancelled(event) &&
+        !itemUtils.isItemRescheduled(event)
 );
 
 const canUnpublishEvent = (event, session, privileges, locks) => (
-    !isNil(event) && !isItemSpiked(event) &&
+    !isNil(event) && !itemUtils.isItemSpiked(event) &&
         !isEventLockRestricted(event, session, locks) &&
-        getPublishedState(event) === PUBLISHED_STATE.USABLE &&
+        itemUtils.getPublishedState(event) === PUBLISHED_STATE.USABLE &&
         !!privileges[PRIVILEGES.PUBLISH_EVENT]
 );
 
 const canCancelEvent = (event, session, privileges, locks) => (
     !isNil(event) &&
-        !isItemSpiked(event) &&
-        !isItemCancelled(event) &&
+        !itemUtils.isItemSpiked(event) &&
+        !itemUtils.isItemCancelled(event) &&
         !isEventLockRestricted(event, session, locks) &&
         !!privileges[PRIVILEGES.EVENT_MANAGEMENT] &&
-        !isItemRescheduled(event)
+        !itemUtils.isItemRescheduled(event)
 );
 
 const isEventInUse = (event) => (
     !isNil(event) &&
-        (eventHasPlanning(event) || isItemPublic(event))
+        (eventHasPlanning(event) || itemUtils.isItemPublic(event))
 );
 
 const isEventLockedForMetadataEdit = (event) => (
@@ -220,50 +214,50 @@ const canConvertToRecurringEvent = (event, session, privileges, locks) => (
     !isNil(event) &&
         !event.recurrence_id &&
         canEditEvent(event, session, privileges, locks) &&
-        !isItemPostponed(event) &&
+        !itemUtils.isItemPostponed(event) &&
         !isEventLockedForMetadataEdit(event)
 );
 
 const canEditEvent = (event, session, privileges, locks) => (
     !isNil(event) &&
-        !isItemSpiked(event) &&
-        !isItemCancelled(event) &&
+        !itemUtils.isItemSpiked(event) &&
+        !itemUtils.isItemCancelled(event) &&
         !isEventLockRestricted(event, session, locks) &&
         !!privileges[PRIVILEGES.EVENT_MANAGEMENT] &&
-        !isItemRescheduled(event)
+        !itemUtils.isItemRescheduled(event)
 );
 
 const canUpdateEvent = (event, session, privileges, locks) => (
     canEditEvent(event, session, privileges, locks) &&
-        isItemPublic(event) &&
+        itemUtils.isItemPublic(event) &&
         !!privileges[PRIVILEGES.PUBLISH_EVENT]
 );
 
 const canUpdateEventTime = (event, session, privileges, locks) => (
     !isNil(event) &&
         canEditEvent(event, session, privileges, locks) &&
-        !isItemPostponed(event) &&
+        !itemUtils.isItemPostponed(event) &&
         !isEventLockedForMetadataEdit(event)
 );
 
 const canRescheduleEvent = (event, session, privileges, locks) => (
     !isNil(event) &&
-        !isItemSpiked(event) &&
-        !isItemCancelled(event) &&
+        !itemUtils.isItemSpiked(event) &&
+        !itemUtils.isItemCancelled(event) &&
         !isEventLockRestricted(event, session, locks) &&
         !!privileges[PRIVILEGES.EVENT_MANAGEMENT] &&
-        !isItemRescheduled(event) &&
+        !itemUtils.isItemRescheduled(event) &&
         !isEventLockedForMetadataEdit(event)
 );
 
 const canPostponeEvent = (event, session, privileges, locks) => (
     !isNil(event) &&
-        !isItemSpiked(event) &&
-        !isItemCancelled(event) &&
+        !itemUtils.isItemSpiked(event) &&
+        !itemUtils.isItemCancelled(event) &&
         !isEventLockRestricted(event, session, locks) &&
         !!privileges[PRIVILEGES.EVENT_MANAGEMENT] &&
-        !isItemPostponed(event) &&
-        !isItemRescheduled(event) &&
+        !itemUtils.isItemPostponed(event) &&
+        !itemUtils.isItemRescheduled(event) &&
         !isEventLockedForMetadataEdit(event)
 );
 

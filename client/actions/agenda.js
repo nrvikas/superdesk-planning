@@ -2,7 +2,7 @@ import * as selectors from '../selectors';
 import {SubmissionError} from 'redux-form';
 import {cloneDeep, pick, get, sortBy} from 'lodash';
 import {PRIVILEGES, AGENDA, MODALS, ITEM_TYPE} from '../constants';
-import {checkPermission, getErrorMessage, isItemSpiked, gettext} from '../utils';
+import {checkPermission, getErrorMessage, itemUtils, gettext} from '../utils';
 import {planning, showModal} from './index';
 
 const openAgenda = () => (
@@ -228,7 +228,7 @@ const _createPlanningFromEvent = (event) => (
             error = 'No Agenda is currently selected.';
         } else if (currentAgenda && !currentAgenda.is_enabled) {
             error = 'Cannot create a new planning item in a disabled Agenda!';
-        } else if (isItemSpiked(event)) {
+        } else if (itemUtils.isItemSpiked(event)) {
             error = 'Cannot create a Planning item from a spiked event!';
         }
 

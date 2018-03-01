@@ -3,7 +3,7 @@ import {showModal} from './index';
 import {MULTISELECT, ITEM_TYPE, MODALS} from '../constants';
 import eventsUi from './events/ui';
 import planningUi from './planning/ui';
-import {getItemType, gettext} from '../utils';
+import {itemUtils, gettext} from '../utils';
 
 /**
  * Action Dispatcher to select an/all Event(s)
@@ -69,7 +69,7 @@ const deSelectPlannings = (planningId, all = false) => (
 // Bulk actions on items
 const itemBulkSpikeModal = (items) => (
     (dispatch) => {
-        const itemType = getItemType(items[0]);
+        const itemType = itemUtils.getItemType(items[0]);
         const itemSpikeDispatch = itemType === ITEM_TYPE.EVENT ?
             eventsUi.spike : planningUi.spike;
 
@@ -87,7 +87,7 @@ const itemBulkSpikeModal = (items) => (
 
 const itemBulkUnSpikeModal = (items) => (
     (dispatch) => {
-        const itemType = getItemType(items[0]);
+        const itemType = itemUtils.getItemType(items[0]);
         const itemUnSpikeDispatch = itemType === ITEM_TYPE.EVENT ?
             eventsUi.unspike : planningUi.unspike;
 

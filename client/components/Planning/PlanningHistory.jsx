@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import * as selectors from '../../selectors';
-import {getItemInArrayById, gettext} from '../../utils';
+import {itemUtils, gettext} from '../../utils';
 import {get, includes} from 'lodash';
 import {AbsoluteDate} from '../index';
 import {ContentBlock} from '../UI/SidePanel';
@@ -32,7 +32,7 @@ export class PlanningHistoryComponent extends React.Component {
 
     render() {
         const {users, planningHistoryItems} = this.props;
-        const displayUser = (recievedUserId) => get(getItemInArrayById(users, recievedUserId), 'display_name');
+        const displayUser = (recievedUserId) => get(itemUtils.getItemInArrayById(users, recievedUserId), 'display_name');
 
         return (
             <ContentBlock>

@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import {ITEM_TYPE} from '../../../constants';
 import {EventPreviewHeader} from '../../Events';
 import {PlanningPreviewHeader} from '../../Planning';
-import {getItemType} from '../../../utils';
+import {itemUtils} from '../../../utils';
 
 export const PreviewHeader = ({item}) => {
-    const itemType = getItemType(item);
+    const itemType = itemUtils.getItemType(item);
 
     switch (itemType) {
     case ITEM_TYPE.EVENT:

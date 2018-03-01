@@ -7,7 +7,7 @@ import {EVENTS, MAIN} from '../../constants';
 import {Item, Border, ItemType, PubStatus, Column, Row, ActionMenu} from '../UI/List';
 import {EventDateTime} from './';
 import {ItemActionsMenu} from '../index';
-import {eventUtils, getItemWorkflowStateLabel, getItemActionedStateLabel, onEventCapture} from '../../utils';
+import {eventUtils, itemUtils, onEventCapture} from '../../utils';
 
 
 export class EventItem extends React.PureComponent {
@@ -21,8 +21,8 @@ export class EventItem extends React.PureComponent {
 
         const hasPlanning = eventUtils.eventHasPlanning(item);
         const isItemLocked = eventUtils.isEventLocked(item, lockedItems);
-        const state = getItemWorkflowStateLabel(item);
-        const actionedState = getItemActionedStateLabel(item);
+        const state = itemUtils.getItemWorkflowStateLabel(item);
+        const actionedState = itemUtils.getItemActionedStateLabel(item);
         const hasLocation = !!get(item, 'location.name') ||
             !!get(item, 'location.formatted_address');
         const showRelatedPlanningLink = activeFilter === MAIN.FILTERS.COMBINED && hasPlanning;

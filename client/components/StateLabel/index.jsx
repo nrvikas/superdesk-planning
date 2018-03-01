@@ -3,11 +3,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {get} from 'lodash';
 import {Label} from '../../components';
-import {getItemWorkflowStateLabel, getItemPublishedStateLabel} from '../../utils';
+import {itemUtils} from '../../utils';
 
 export const StateLabel = ({item, verbose, withPubStatus, className, fieldName}) => {
-    const state = getItemWorkflowStateLabel(item, fieldName);
-    const pubState = withPubStatus ? getItemPublishedStateLabel(item) : null;
+    const state = itemUtils.getItemWorkflowStateLabel(item, fieldName);
+    const pubState = withPubStatus ? itemUtils.getItemPublishedStateLabel(item) : null;
 
     if (!state) {
         return null;
@@ -17,7 +17,7 @@ export const StateLabel = ({item, verbose, withPubStatus, className, fieldName})
         text={state.label}
         iconType={state.iconType}
         verbose={verbose ? get(state, 'labelVerbose') : null}
-        tooltip={state.tooltip ? {text: state.tooltip} : null}
+        tooltip={!verbose && state.tooltip ? {text: state.tooltip} : null}
     />;
 
     return (

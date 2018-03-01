@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {get} from 'lodash';
 
-import {getCreator} from '../../../utils';
+import {itemUtils} from '../../../utils';
 
 import {ContentBlock, ContentBlockInner} from '../../UI/SidePanel';
 import {AuditInformation, StateLabel, ItemIcon} from '../..';
@@ -20,8 +20,8 @@ export const PlanningEditorHeader = ({item, users}) => {
         );
     }
 
-    const createdBy = getCreator(item, 'original_creator', users);
-    const updatedBy = getCreator(item, 'version_creator', users);
+    const createdBy = itemUtils.getCreator(item, 'original_creator', users);
+    const updatedBy = itemUtils.getCreator(item, 'version_creator', users);
     const creationDate = get(item, '_created');
     const updatedDate = get(item, '_updated');
     const versionCreator = get(updatedBy, 'display_name') ? updatedBy :

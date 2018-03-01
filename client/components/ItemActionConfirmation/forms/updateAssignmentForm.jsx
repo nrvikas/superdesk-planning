@@ -7,7 +7,7 @@ import * as actions from '../../../actions';
 import * as selectors from '../../../selectors';
 
 import {ASSIGNMENTS} from '../../../constants';
-import {gettext, getItemInArrayById, assignmentUtils} from '../../../utils';
+import {gettext, itemUtils, assignmentUtils} from '../../../utils';
 
 import {AssignmentEditor} from '../../Assignments';
 
@@ -69,13 +69,13 @@ export class UpdateAssignmentComponent extends React.Component {
         const scheduled = get(this.props, 'initialValues.planning.scheduled') || '';
 
         const priorityQcode = get(this.props, 'initialValues.priority');
-        const priority = getItemInArrayById(this.props.priorities, priorityQcode, 'qcode');
+        const priority = itemUtils.getItemInArrayById(this.props.priorities, priorityQcode, 'qcode');
 
         const canEditDesk = assignmentUtils.canEditDesk(this.props.initialValues);
 
         const deskId = get(this.props, 'initialValues.assigned_to.desk') || null;
         const desk = deskId ?
-            getItemInArrayById(this.props.desks, deskId) :
+            itemUtils.getItemInArrayById(this.props.desks, deskId) :
             {};
 
         const infoProps = {

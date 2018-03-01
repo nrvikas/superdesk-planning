@@ -8,11 +8,9 @@ import {locks, showModal} from './';
 import {selectAgenda, fetchSelectedAgendaPlannings} from './agenda';
 import {
     getErrorMessage,
-    getItemType,
+    itemUtils,
     gettext,
     eventUtils,
-    shouldLockItemForEdit,
-    shouldUnLockItem,
 } from '../utils';
 import {MODALS, WORKSPACE} from '../constants';
 import eventsPlanningUi from './eventsPlanning/ui';
@@ -44,7 +42,7 @@ const lockAndEdit = (item) => (
 
         // If it is an existing item and the item is not locked
         // then lock the item, otherwise return the existing item
-        if (shouldLockItemForEdit(item, lockedItems)) {
+        if (itemUtils.shouldLockItemForEdit(item, lockedItems)) {
             promise = dispatch(locks.lock(item));
         } else {
             promise = Promise.resolve(item);
@@ -76,7 +74,7 @@ const unlockAndCancel = (item) => (
 
         // If the item exists and is locked in this session
         // then unlock the item
-        if (shouldUnLockItem(item,
+        if (itemUtils.shouldUnLockItem(item,
             selectors.getSessionDetails(state),
             selectors.general.currentWorkspace(state))) {
             dispatch(locks.unlock(item));
@@ -101,7 +99,7 @@ const unlockAndCloseEditor = (item) => (
 
 const save = (item, {save = true, publish = false, unpublish = false} = {}) => (
     (dispatch, getState, {notify}) => {
-        const itemType = getItemType(item);
+        const itemType = itemUtils.getItemType(item);
         let promise;
 
         switch (itemType) {
@@ -137,7 +135,7 @@ const save = (item, {save = true, publish = false, unpublish = false} = {}) => (
 
 const unpublish = (item) => (
     (dispatch, getState, {notify}) => {
-        const itemType = getItemType(item);
+        const itemType = itemUtils.getItemType(item);
 
         switch (itemType) {
         case ITEM_TYPE.EVENT:
@@ -155,7 +153,7 @@ const unpublish = (item) => (
 
 const openCancelModal = (item, publish = false) => (
     (dispatch) => {
-        const itemType = getItemType(item);
+        const itemType = itemUtils.getItemType(item);
 
         switch (itemType) {
         case ITEM_TYPE.EVENT:

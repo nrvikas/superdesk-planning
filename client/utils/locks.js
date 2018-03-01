@@ -1,6 +1,6 @@
 import {isNil, get} from 'lodash';
 import {ITEM_TYPE} from '../constants';
-import {getItemType, eventUtils, planningUtils, assignmentUtils} from './index';
+import {itemUtils, eventUtils, planningUtils, assignmentUtils} from './index';
 
 const isLockedByUser = (item, userId, action) => (
     !isNil(get(item, 'lock_session')) &&
@@ -21,7 +21,7 @@ const getLock = (item, lockedItems) => {
         return null;
     }
 
-    switch (getItemType(item)) {
+    switch (itemUtils.getItemType(item)) {
     case ITEM_TYPE.EVENT:
         return self.getEventLock(item, lockedItems);
     case ITEM_TYPE.PLANNING:
@@ -65,7 +65,7 @@ const isItemLockedInThisSession = (item, session) => (
 );
 
 const isLockRestricted = (item, session, lockedItems) => {
-    switch (getItemType(item)) {
+    switch (itemUtils.getItemType(item)) {
     case ITEM_TYPE.EVENT:
         return eventUtils.isEventLockRestricted(item, session, lockedItems);
     case ITEM_TYPE.PLANNING:

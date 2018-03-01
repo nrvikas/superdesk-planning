@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {gettext, getCreator, getItemInArrayById, getDateTimeString} from '../../utils';
+import {gettext, itemUtils, getDateTimeString} from '../../utils';
 import * as selectors from '../../selectors';
 import * as actions from '../../actions';
 import {get} from 'lodash';
@@ -30,15 +30,15 @@ export class PlanningPreviewContentComponent extends React.Component {
             urgencies,
             streetMapUrl
         } = this.props;
-        const createdBy = getCreator(item, 'original_creator', users);
-        const updatedBy = getCreator(item, 'version_creator', users);
+        const createdBy = itemUtils.getCreator(item, 'original_creator', users);
+        const updatedBy = itemUtils.getCreator(item, 'version_creator', users);
         const creationDate = get(item, '_created');
         const updatedDate = get(item, '_updated');
         const versionCreator = get(updatedBy, 'display_name') ? updatedBy :
             users.find((user) => user._id === updatedBy);
 
         const agendaText = get(item, 'agendas.length', 0) === 0 ? '' :
-            item.agendas.map((a) => getItemInArrayById(agendas, a).name).join(', ');
+            item.agendas.map((a) => itemUtils.getItemInArrayById(agendas, a).name).join(', ');
         const placeText = get(item, 'place.length', 0) === 0 ? '' :
             item.place.map((c) => c.name).join(', ');
         const categoryText = get(item, 'anpa_category.length', 0) === 0 ? '' :
@@ -47,7 +47,7 @@ export class PlanningPreviewContentComponent extends React.Component {
             item.subject.map((s) => s.name).join(', ');
 
         const hasCoverage = get(item, 'coverages.length', 0) > 0;
-        const urgency = getItemInArrayById(urgencies, item.urgency, 'qcode');
+        const urgency = itemUtils.getItemInArrayById(urgencies, item.urgency, 'qcode');
 
         return (
             <ContentBlock>

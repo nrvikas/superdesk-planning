@@ -4,14 +4,14 @@ import {Row as PreviewRow} from '../UI/Preview';
 import {CollapseBox} from '../UI';
 import moment from 'moment-timezone';
 import {get} from 'lodash';
-import {getCreator, getItemInArrayById, getDateTimeString, gettext} from '../../utils';
+import {itemUtils, getDateTimeString, gettext} from '../../utils';
 import {StateLabel} from '../index';
 import {PLANNING} from '../../constants';
 
 import {CoverageItem} from './';
 
 export const CoveragePreview = ({coverage, users, desks, newsCoverageStatus, dateFormat, timeFormat, formProfile}) => {
-    const userAssigned = getCreator(coverage, 'assigned_to.user', users);
+    const userAssigned = itemUtils.getCreator(coverage, 'assigned_to.user', users);
     const deskAssigned = desks.find((d) =>
         d._id === get(coverage, 'assigned_to.desk'));
     const coverageDate = get(coverage, 'planning.scheduled');
@@ -24,8 +24,8 @@ export const CoveragePreview = ({coverage, users, desks, newsCoverageStatus, dat
         assigned_date_desk,
     } = coverage.assigned_to;
 
-    const deskAssignor = getItemInArrayById(users, assignor_desk);
-    const userAssignor = getItemInArrayById(users, assignor_user);
+    const deskAssignor = itemUtils.getItemInArrayById(users, assignor_desk);
+    const userAssignor = itemUtils.getItemInArrayById(users, assignor_user);
 
     const coverageStatus = get(coverage, 'news_coverage_status.qcode', '') ===
         PLANNING.NEWS_COVERAGE_CANCELLED_STATUS.qcode ? PLANNING.NEWS_COVERAGE_CANCELLED_STATUS :

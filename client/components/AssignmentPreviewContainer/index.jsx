@@ -12,9 +12,8 @@ import * as selectors from '../../selectors';
 import * as actions from '../../actions';
 import {
     assignmentUtils,
-    getCreator,
     getCoverageIcon,
-    getItemInArrayById,
+    itemUtils,
 } from '../../utils';
 import {ASSIGNMENTS, WORKSPACE} from '../../constants';
 import {
@@ -100,17 +99,17 @@ class AssignmentPreviewContainerComponent extends React.Component {
 
         const state = get(assignedTo, 'state');
 
-        const createdBy = getCreator(assignment, 'original_creator', users);
-        const updatedBy = getCreator(assignment, 'version_creator', users);
+        const createdBy = itemUtils.getCreator(assignment, 'original_creator', users);
+        const updatedBy = itemUtils.getCreator(assignment, 'version_creator', users);
         const creationDate = get(assignment, '_created');
         const updatedDate = get(assignment, '_updated');
         const versionCreator = get(updatedBy, 'display_name') ? updatedBy :
             users.find((user) => user._id === updatedBy);
 
-        const assignedUser = getItemInArrayById(users, get(assignedTo, 'user'));
-        const assignedDesk = getItemInArrayById(desks, get(assignedTo, 'desk'));
-        const deskAssignor = getItemInArrayById(users, get(assignedTo, 'assignor_desk'));
-        const userAssignor = getItemInArrayById(users, get(assignedTo, 'assignor_user'));
+        const assignedUser = itemUtils.getItemInArrayById(users, get(assignedTo, 'user'));
+        const assignedDesk = itemUtils.getItemInArrayById(desks, get(assignedTo, 'desk'));
+        const deskAssignor = itemUtils.getItemInArrayById(users, get(assignedTo, 'assignor_desk'));
+        const userAssignor = itemUtils.getItemInArrayById(users, get(assignedTo, 'assignor_user'));
         const deskAssignorName = get(deskAssignor, 'display_name') ||
             get(deskAssignor, 'name') || '-';
         const userAssignorName = get(userAssignor, 'display_name') ||

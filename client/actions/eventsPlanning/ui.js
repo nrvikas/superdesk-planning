@@ -4,7 +4,7 @@ import eventsApi from '../events/api';
 import planningApi from '../planning/api';
 import {EVENTS_PLANNING, MAIN, ITEM_TYPE} from '../../constants';
 import * as selectors from '../../selectors';
-import {getItemType, dispatchUtils} from '../../utils';
+import {itemUtils, dispatchUtils} from '../../utils';
 
 /**
  * Action to fetch events and planning based on the params
@@ -93,7 +93,7 @@ const receiveEventsPlanning = (items = []) => (
         const plannings = [];
 
         items.forEach((item) => {
-            const type = getItemType(item);
+            const type = itemUtils.getItemType(item);
 
             if (type === ITEM_TYPE.EVENT) {
                 events.push(item);

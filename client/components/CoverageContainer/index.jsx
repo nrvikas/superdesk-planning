@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import {getCreator} from '../../utils';
+import {itemUtils} from '../../utils';
 import {planningUtils} from '../../utils';
 import {Coverage, AuditInformation, ItemActionsMenu, CoverageListItem} from '../index';
 import {get} from 'lodash';
@@ -54,10 +54,10 @@ export class CoverageContainer extends React.Component {
             desks,
         } = this.props;
 
-        const author = getCreator(coverage, 'original_creator', users);
+        const author = itemUtils.getCreator(coverage, 'original_creator', users);
         const creationDate = get(coverage, '_created');
 
-        const versionCreator = getCreator(coverage, 'version_creator', users);
+        const versionCreator = itemUtils.getCreator(coverage, 'version_creator', users);
         const updatedDate = get(coverage, '_updated');
 
         const duplicateActions = contentTypes

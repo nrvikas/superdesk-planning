@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import {get, cloneDeep, isEqual} from 'lodash';
-import {getItemInArrayById, getUsersForDesk, getDesksForUser, gettext} from '../../../utils';
+import {itemUtils, getUsersForDesk, getDesksForUser, gettext} from '../../../utils';
 import {validateItem} from '../../../validators';
 
 import {
@@ -26,16 +26,16 @@ export class AssignmentEditorComponent extends React.Component {
         };
 
         const userId = get(props.value, this.FIELDS.USER);
-        const user = getItemInArrayById(props.users, userId);
+        const user = itemUtils.getItemInArrayById(props.users, userId);
 
         const deskId = get(props.value, this.FIELDS.DESK);
-        const desk = getItemInArrayById(props.desks, deskId);
+        const desk = itemUtils.getItemInArrayById(props.desks, deskId);
 
         const filteredUsers = getUsersForDesk(desk, props.users);
         const filteredDesks = getDesksForUser(user, props.desks);
 
         const priorityQcode = get(props.value, this.FIELDS.PRIORITY);
-        const priority = getItemInArrayById(props.priorities, priorityQcode, 'qcode');
+        const priority = itemUtils.getItemInArrayById(props.priorities, priorityQcode, 'qcode');
 
         const errors = {};
 
@@ -63,7 +63,7 @@ export class AssignmentEditorComponent extends React.Component {
         if (!this.state.priorityQcode) {
             this.onPriorityChange(
                 this.FIELDS.PRIORITY,
-                getItemInArrayById(this.props.priorities, ASSIGNMENTS.DEFAULT_PRIORITY, 'qcode')
+                itemUtils.getItemInArrayById(this.props.priorities, ASSIGNMENTS.DEFAULT_PRIORITY, 'qcode')
             );
         }
     }
@@ -74,15 +74,15 @@ export class AssignmentEditorComponent extends React.Component {
         const priorityQcode = get(nextProps.value, this.FIELDS.PRIORITY);
 
         if (userId !== this.state.userId) {
-            this.onUserChange(null, getItemInArrayById(nextProps.users, userId));
+            this.onUserChange(null, itemUtils.getItemInArrayById(nextProps.users, userId));
         }
 
         if (deskId !== this.state.deskId) {
-            this.onDeskChange(null, getItemInArrayById(nextProps.desks, deskId));
+            this.onDeskChange(null, itemUtils.getItemInArrayById(nextProps.desks, deskId));
         }
 
         if (priorityQcode && priorityQcode !== this.state.priorityQcode) {
-            this.onPriorityChange(null, getItemInArrayById(nextProps.priorities, priorityQcode, 'qcode'));
+            this.onPriorityChange(null, itemUtils.getItemInArrayById(nextProps.priorities, priorityQcode, 'qcode'));
         }
     }
 

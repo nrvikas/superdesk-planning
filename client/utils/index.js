@@ -16,10 +16,8 @@ import {
 } from '../constants/index';
 import * as testData from './testData';
 import {gettext, gettextCatalog} from './gettext';
+export {default as itemUtils} from './item';
 import {default as lockUtils} from './locks';
-import {default as planningUtils} from './planning';
-
-
 export {default as checkPermission} from './checkPermission';
 export {default as dispatchUtils} from './dispatch';
 export {default as registerNotifications} from './notifications';
@@ -29,7 +27,6 @@ export {default as assignmentUtils} from './assignments';
 export {default as stringUtils} from './strings';
 export {gettext, gettextCatalog};
 export {lockUtils};
-export {planningUtils};
 
 // Polyfill Promise.finally function as this was introduced in Chrome 63+
 import promiseFinally from 'promise.prototype.finally';
@@ -319,26 +316,6 @@ export const getErrorMessage = (error, defaultMessage) => {
 };
 
 /**
- * Helper function to retrieve the user object using their ID from an item field.
- * i.e. get the User object for 'original_creator'
- * @param {object} item - The item to get the ID from
- * @param {string} creator - The field name where the ID is stored
- * @param {Array} users - The array of users, typically from the redux store
- * @return {object} The user object found, otherwise nothing is returned
- */
-export const getCreator = (item, creator, users) => {
-    const user = get(item, creator);
-
-    if (user) {
-        return user.display_name ? user : users.find((u) => u._id === user);
-    }
-};
-
-export const getItemInArrayById = (items, id, field = '_id') => (
-    id ? items.find((item) => get(item, field) === id) : null
-);
-
-/**
  * Get the name of associated icon for different coverage types
  * @param {type} coverage types
  * @returns {string} icon name
@@ -355,138 +332,12 @@ export const getCoverageIcon = (type) => {
     return get(coverageIcons, type, 'icon-file');
 };
 
-export const isSameItemId = (item1, item2) => get(item1, '_id') === get(item2, '_id');
-export const getItemWorkflowState = (item, field = 'state') => (get(item, field, WORKFLOW_STATE.DRAFT));
-export const isItemCancelled = (item) => getItemWorkflowState(item) === WORKFLOW_STATE.CANCELLED;
-export const isItemRescheduled = (item) => getItemWorkflowState(item) === WORKFLOW_STATE.RESCHEDULED;
-export const isItemKilled = (item) => getItemWorkflowState(item) === WORKFLOW_STATE.KILLED;
-export const isItemPostponed = (item) => getItemWorkflowState(item) === WORKFLOW_STATE.POSTPONED;
-
-export const getItemActionedStateLabel = (item) => {
-    // Currently will cater for 'rescheduled from' scenario.
-    // If we need to use this for 'dpulicate from' or any other, we can extend it
-
-    if (item.reschedule_from) {
-        return {
-            label: gettext('Rescheduled From'),
-            iconType: 'highlight2',
-        };
-    }
-};
-
-// eslint-disable-next-line complexity
-export const getItemWorkflowStateLabel = (item, field = 'state') => {
-    switch (getItemWorkflowState(item, field)) {
-    case WORKFLOW_STATE.DRAFT:
-        return {
-            label: gettext('draft'),
-            iconHollow: true,
-        };
-    case WORKFLOW_STATE.SPIKED:
-        return {
-            label: gettext('spiked'),
-            iconType: 'alert',
-        };
-    case WORKFLOW_STATE.INGESTED:
-        return {
-            label: gettext('ingested'),
-            iconHollow: true,
-        };
-    case WORKFLOW_STATE.SCHEDULED:
-        return {
-            label: gettext('Scheduled'),
-            labelVerbose: 'Scheduled',
-            iconType: 'success',
-            tooltip: TOOLTIPS.scheduledState,
-        };
-    case WORKFLOW_STATE.KILLED:
-        return {
-            label: gettext('Killed'),
-            iconType: 'warning',
-            tooltip: TOOLTIPS.withheldState,
-        };
-    case WORKFLOW_STATE.RESCHEDULED:
-        return {
-            label: gettext('Rescheduled'),
-            iconType: 'highlight2',
-        };
-    case WORKFLOW_STATE.CANCELLED:
-        return {
-            label: gettext('Cancelled'),
-            iconType: 'yellow2',
-        };
-    case WORKFLOW_STATE.POSTPONED:
-        return {
-            label: gettext('Postponed'),
-            iconType: 'yellow2',
-
-        };
-    case ASSIGNMENTS.WORKFLOW_STATE.ASSIGNED:
-        return {
-            label: gettext('Assigned'),
-            iconHollow: true,
-        };
-    case ASSIGNMENTS.WORKFLOW_STATE.IN_PROGRESS:
-        return {
-            label: gettext('In Progress'),
-            iconType: 'yellow2',
-            iconHollow: true,
-        };
-    case ASSIGNMENTS.WORKFLOW_STATE.SUBMITTED:
-        return {
-            label: gettext('Submitted'),
-            iconType: 'yellow2',
-            iconHollow: true,
-        };
-    case ASSIGNMENTS.WORKFLOW_STATE.COMPLETED:
-        return {
-            label: gettext('Completed'),
-            iconType: 'success',
-        };
-    }
-};
-
-export const getItemPublishedStateLabel = (item) => {
-    switch (getPublishedState(item)) {
-    case PUBLISHED_STATE.USABLE:
-        return {
-            label: 'P',
-            labelVerbose: gettext('Published'),
-            iconType: 'success',
-            tooltip: TOOLTIPS.publishedState,
-        };
-
-    case PUBLISHED_STATE.CANCELLED:
-        return {
-            label: gettext('Cancelled'),
-            iconType: 'yellow2',
-        };
-    }
-};
-
-export const isItemPublic = (item = {}) =>
-    !!item && (typeof item === 'string' ?
-        item === PUBLISHED_STATE.USABLE || item === PUBLISHED_STATE.CANCELLED :
-        item.pubstatus === PUBLISHED_STATE.USABLE || item.pubstatus === PUBLISHED_STATE.CANCELLED);
-
-export const isItemSpiked = (item) => item ?
-    getItemWorkflowState(item) === WORKFLOW_STATE.SPIKED : false;
-
-export const shouldLockItemForEdit = (item, lockedItems) =>
-    get(item, '_id') && !lockUtils.getLock(item, lockedItems) && !isItemSpiked(item);
-
-export const shouldUnLockItem = (item, session, currentWorkspace) =>
-    (currentWorkspace === WORKSPACE.AUTHORING && planningUtils.isLockedForAddToPlanning(item)) ||
-    (currentWorkspace !== WORKSPACE.AUTHORING && lockUtils.isItemLockedInThisSession(item, session));
-
 /**
  * Get the timezone offset
  * @param {Array} coverages
  * @returns {Array}
  */
 export const getTimeZoneOffset = () => (moment().format('Z'));
-
-export const getPublishedState = (item) => get(item, 'pubstatus', null);
 
 export const sanitizeTextForQuery = (text) => (
     text.replace(/\//g, '\\/').replace(/[()]/g, '')
@@ -503,10 +354,6 @@ export const getAssignmentPriority = (priorityQcode, priorities) => {
     }
 };
 
-export const getItemsById = (ids, items) => (
-    ids.map((id) => (items[id]))
-);
-
 export const getUsersForDesk = (desk, globalUserList = []) => {
     if (!desk) return globalUserList;
 
@@ -519,22 +366,6 @@ export const getDesksForUser = (user, desksList = []) => {
 
     return desksList.filter((desk) =>
         map(desk.members, 'user').indexOf(user._id) !== -1);
-};
-
-export const getItemType = (item) => {
-    const itemType = get(item, '_type');
-
-    if (itemType === ITEM_TYPE.EVENT) {
-        return ITEM_TYPE.EVENT;
-    } else if (itemType === ITEM_TYPE.PLANNING) {
-        return ITEM_TYPE.PLANNING;
-    } else if (itemType === ITEM_TYPE.ASSIGNMENT) {
-        return ITEM_TYPE.ASSIGNMENT;
-    } else if (itemType === ITEM_TYPE.ARCHIVE) {
-        return ITEM_TYPE.ARCHIVE;
-    }
-
-    return ITEM_TYPE.UNKNOWN;
 };
 
 export const getDateTimeString = (date, dateFormat, timeFormat) => (

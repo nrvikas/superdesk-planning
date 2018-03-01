@@ -11,14 +11,9 @@ import {
 } from '../constants/index';
 import {get, isNil, uniq, sortBy, isEmpty, cloneDeep} from 'lodash';
 import {
-    getItemWorkflowState,
+    itemUtils,
     lockUtils,
-    isItemPublic,
-    isItemSpiked,
-    isItemRescheduled,
     eventUtils,
-    isItemCancelled,
-    getPublishedState,
     isEmptyActions, isDateInRange,
 } from './index';
 
@@ -28,41 +23,41 @@ const canPublishPlanning = (planning, event, session, privileges, locks) => (
     !!privileges[PRIVILEGES.PUBLISH_PLANNING] &&
         !!get(planning, '_id') &&
         !isPlanningLockRestricted(planning, session, locks) &&
-        getPublishedState(planning) !== PUBLISHED_STATE.USABLE &&
-        (isNil(event) || getPublishedState(event) === PUBLISHED_STATE.USABLE) &&
-        !isItemSpiked(planning) &&
-        !isItemSpiked(event) &&
-        !isItemCancelled(planning) &&
-        !isItemCancelled(event) &&
-        !isItemRescheduled(planning) &&
-        !isItemRescheduled(event) &&
+        itemUtils.getPublishedState(planning) !== PUBLISHED_STATE.USABLE &&
+        (isNil(event) || itemUtils.getPublishedState(event) === PUBLISHED_STATE.USABLE) &&
+        !itemUtils.isItemSpiked(planning) &&
+        !itemUtils.isItemSpiked(event) &&
+        !itemUtils.isItemCancelled(planning) &&
+        !itemUtils.isItemCancelled(event) &&
+        !itemUtils.isItemRescheduled(planning) &&
+        !itemUtils.isItemRescheduled(event) &&
         !isNotForPublication(planning)
 );
 
 const canUnpublishPlanning = (planning, event, session, privileges, locks) => (
-    !!privileges[PRIVILEGES.PUBLISH_PLANNING] && !isItemSpiked(planning) &&
+    !!privileges[PRIVILEGES.PUBLISH_PLANNING] && !itemUtils.isItemSpiked(planning) &&
         !isPlanningLockRestricted(planning, session, locks) &&
-        getPublishedState(planning) === PUBLISHED_STATE.USABLE
+        itemUtils.getPublishedState(planning) === PUBLISHED_STATE.USABLE
 );
 
 const canEditPlanning = (planning, event, session, privileges, locks) => (
     !!privileges[PRIVILEGES.PLANNING_MANAGEMENT] &&
         !isPlanningLockRestricted(planning, session, locks) &&
-        !isItemSpiked(planning) &&
-        !isItemSpiked(event) &&
-        !isItemCancelled(planning) &&
-        !isItemRescheduled(planning)
+        !itemUtils.isItemSpiked(planning) &&
+        !itemUtils.isItemSpiked(event) &&
+        !itemUtils.isItemCancelled(planning) &&
+        !itemUtils.isItemRescheduled(planning)
 );
 
 const canUpdatePlanning = (planning, event, session, privileges, locks) => (
     canEditPlanning(planning, event, session, privileges, locks) &&
-        isItemPublic(planning) && !!privileges[PRIVILEGES.PUBLISH_PLANNING] &&
-        !isItemSpiked(planning)
+        itemUtils.isItemPublic(planning) && !!privileges[PRIVILEGES.PUBLISH_PLANNING] &&
+        !itemUtils.isItemSpiked(planning)
 );
 
 const canSpikePlanning = (plan, session, privileges, locks) => (
-    !isItemPublic(plan) &&
-        getItemWorkflowState(plan) === WORKFLOW_STATE.DRAFT &&
+    !itemUtils.isItemPublic(plan) &&
+        itemUtils.getItemWorkflowState(plan) === WORKFLOW_STATE.DRAFT &&
         !!privileges[PRIVILEGES.SPIKE_PLANNING] &&
         !!privileges[PRIVILEGES.PLANNING_MANAGEMENT] &&
         !isPlanningLockRestricted(plan, session, locks) &&
@@ -70,30 +65,30 @@ const canSpikePlanning = (plan, session, privileges, locks) => (
 );
 
 const canUnspikePlanning = (plan, event = null, privileges) => (
-    isItemSpiked(plan) &&
+    itemUtils.isItemSpiked(plan) &&
         !!privileges[PRIVILEGES.UNSPIKE_PLANNING] &&
         !!privileges[PRIVILEGES.PLANNING_MANAGEMENT] &&
-        !isItemSpiked(event)
+        !itemUtils.isItemSpiked(event)
 );
 
 const canDuplicatePlanning = (plan, event = null, session, privileges, locks) => (
-    !isItemSpiked(plan) &&
+    !itemUtils.isItemSpiked(plan) &&
         !!privileges[PRIVILEGES.PLANNING_MANAGEMENT] &&
         !self.isPlanningLockRestricted(plan, session, locks) &&
-        !isItemSpiked(event)
+        !itemUtils.isItemSpiked(event)
 );
 
 const canCancelPlanning = (planning, event = null, session, privileges, locks) => (
     !!privileges[PRIVILEGES.PLANNING_MANAGEMENT] &&
         !isPlanningLockRestricted(planning, session, locks) &&
-        getItemWorkflowState(planning) === WORKFLOW_STATE.SCHEDULED &&
-        getItemWorkflowState(event) !== WORKFLOW_STATE.SPIKED
+        itemUtils.getItemWorkflowState(planning) === WORKFLOW_STATE.SCHEDULED &&
+        itemUtils.getItemWorkflowState(event) !== WORKFLOW_STATE.SPIKED
 );
 
 const canCancelAllCoverage = (planning, event = null, session, privileges, locks) => (
     !!privileges[PRIVILEGES.PLANNING_MANAGEMENT] &&
-        !isItemSpiked(planning) && !isPlanningLockRestricted(planning, session, locks) &&
-        getItemWorkflowState(event) !== WORKFLOW_STATE.SPIKED &&
+        !itemUtils.isItemSpiked(planning) && !isPlanningLockRestricted(planning, session, locks) &&
+        itemUtils.getItemWorkflowState(event) !== WORKFLOW_STATE.SPIKED &&
         canCancelAllCoverageForPlanning(planning)
 );
 
@@ -312,7 +307,7 @@ const getPlanningActions = (item, event, session, privileges, lockedItems, callB
     });
 
     // Don't include event actions if planning is spiked
-    if (eventActions.length > 1 && !isItemSpiked(item)) {
+    if (eventActions.length > 1 && !itemUtils.isItemSpiked(item)) {
         actions.push(...eventActions);
     }
 
@@ -528,9 +523,6 @@ const getPlanningByDate = (plansInList, events, startDate, endDate) => {
     return sortBy(sortable, [(e) => e.date]);
 };
 
-const isLockedForAddToPlanning = (item) => get(item, 'lock_action') ===
-    PLANNING.ITEM_ACTIONS.ADD_TO_PLANNING.lock_action;
-
 const isCoverageDraft = (coverage) => get(coverage, 'workflow_status') === WORKFLOW_STATE.DRAFT;
 const isCoverageInWorkflow = (coverage) => !isEmpty(coverage.assigned_to) &&
     get(coverage, 'assigned_to.state') !== WORKFLOW_STATE.DRAFT;
@@ -559,7 +551,6 @@ const self = {
     isNotForPublication,
     getPlanningByDate,
     createCoverageFromNewsItem,
-    isLockedForAddToPlanning,
     isCoverageAssigned,
     isCoverageDraft,
     isCoverageInWorkflow,

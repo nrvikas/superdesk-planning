@@ -5,7 +5,7 @@ import {get, map} from 'lodash';
 import classNames from 'classnames';
 
 import {AuditInformation, HtmlPreview, StateLabel, ItemRendition, PriorityLabel, UrgencyLabel} from '../';
-import {getCreator} from '../../utils';
+import {itemUtils} from '../../utils';
 import * as actions from '../../actions';
 import * as selectors from '../../selectors';
 
@@ -49,8 +49,8 @@ class ArchivePreviewComponent extends React.Component {
             return null;
         }
 
-        const createdBy = getCreator(archive, 'original_creator', users);
-        const updatedBy = getCreator(archive, 'version_creator', users);
+        const createdBy = itemUtils.getCreator(archive, 'original_creator', users);
+        const updatedBy = itemUtils.getCreator(archive, 'version_creator', users);
         const creationDate = get(archive, '_created');
         const updatedDate = get(archive, '_updated');
         const versionCreator = get(updatedBy, 'display_name') ? updatedBy :

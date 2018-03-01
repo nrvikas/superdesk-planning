@@ -14,7 +14,7 @@ import {
 } from './components/Main';
 import {WorkqueueContainer, ModalsContainer} from './components';
 
-import {getItemType, planningUtils} from './utils';
+import {itemUtils, planningUtils} from './utils';
 
 import './planning.scss';
 
@@ -54,7 +54,7 @@ class PlanningApp extends React.Component {
 
     onItemDoubleClick(item) {
         if (!!this.props.addNewsItemToPlanning &&
-                planningUtils.isLockedForAddToPlanning(this.props.editItem)) {
+                itemUtils.isLockedForAddToPlanning(this.props.editItem)) {
             // Currently edited item is locked for add_to_planning, release lock on it
             // Unlock this item and close editor first
             this.props.cancel(this.props.editItem);
@@ -90,7 +90,7 @@ class PlanningApp extends React.Component {
         let selectedList = this.props.selectedEventIds;
         let multiSelectDispatch = this.props.multiSelectEvent;
 
-        if (getItemType(item) === ITEM_TYPE.PLANNING) {
+        if (itemUtils.getItemType(item) === ITEM_TYPE.PLANNING) {
             selectedList = this.props.selectedPlanningIds;
             multiSelectDispatch = this.props.multiSelectPlanning;
         }

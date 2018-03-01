@@ -14,10 +14,8 @@ import * as selectors from '../../selectors';
 import {get} from 'lodash';
 import './style.scss';
 import {
-    getCreator,
     planningUtils,
-    isItemSpiked,
-    isItemPublic,
+    itemUtils,
     lockUtils,
 } from '../../utils';
 import {
@@ -230,12 +228,12 @@ export class EditPlanningPanel extends React.Component {
         const creationDate = get(planning, '_created');
         const updatedDate = get(planning, '_updated');
 
-        const author = getCreator(planning, 'original_creator', users);
-        const versionCreator = getCreator(planning, 'version_creator', users);
+        const author = itemUtils.getCreator(planning, 'original_creator', users);
+        const versionCreator = itemUtils.getCreator(planning, 'version_creator', users);
 
         const lockedUser = lockUtils.getLockedUser(planning, lockedItems, users);
-        const planningSpiked = isItemSpiked(planning);
-        const eventSpiked = isItemSpiked(event);
+        const planningSpiked = itemUtils.isItemSpiked(planning);
+        const eventSpiked = itemUtils.isItemSpiked(event);
 
         const inPlanning = currentWorkspace === WORKSPACE.PLANNING;
 
@@ -252,7 +250,7 @@ export class EditPlanningPanel extends React.Component {
             !lockedInThisSession
         );
 
-        const isPublic = isItemPublic(planning);
+        const isPublic = itemUtils.isItemPublic(planning);
         const canEdit = planningUtils.canEditPlanning(planning, event, session, privileges, lockedItems);
         const canUpdate = planningUtils.canUpdatePlanning(planning, event, session, privileges, lockedItems);
         const canPublish = planningUtils.canPublishPlanning(planning, event, session, privileges, lockedItems);

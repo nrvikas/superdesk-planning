@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {Column} from './Column';
-import {isItemPublic, planningUtils} from '../../../utils';
+import {itemUtils, planningUtils} from '../../../utils';
 
 export const PubStatus = ({item}) => {
     let badge;
 
-    if (isItemPublic(item)) {
+    if (itemUtils.isItemPublic(item)) {
         badge = <span className="badge badge--success">P</span>;
     } else if (planningUtils.isNotForPublication(item)) {
         badge = <i

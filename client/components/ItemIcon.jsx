@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {ITEM_TYPE} from '../constants';
-import {getItemType, getCoverageIcon, eventUtils, planningUtils} from '../utils';
+import {itemUtils, getCoverageIcon, eventUtils, planningUtils} from '../utils';
 
 export const ItemIcon = ({item, big, white, blue, showRepeating}) => {
     const getItemIcon = () => {
@@ -50,7 +50,7 @@ export const ItemIcon = ({item, big, white, blue, showRepeating}) => {
             )}/>
         );
 
-        const itemType = getItemType(item);
+        const itemType = itemUtils.getItemType(item);
 
         let icon = eventIcon;
         let multiValidator = eventUtils.isEventRecurring;

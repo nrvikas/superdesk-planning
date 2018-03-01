@@ -85,7 +85,7 @@ const mapDispatchToProps = (dispatch) => ({
                 }
 
                 if (plan.lock_action === PLANNING.ITEM_ACTIONS.CANCEL_ALL_COVERAGE.lock_action ||
-                    isItemCancelled(plan)) {
+                    itemUtils.isItemCancelled(plan)) {
                     dispatch(actions.planning.api.unlock(plan));
                 }
             });

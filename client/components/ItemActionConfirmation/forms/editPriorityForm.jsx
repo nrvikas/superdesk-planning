@@ -5,7 +5,7 @@ import {isEqual, get} from 'lodash';
 import * as actions from '../../../actions';
 import * as selectors from '../../../selectors';
 import {ASSIGNMENTS} from '../../../constants';
-import {gettext, getItemInArrayById} from '../../../utils';
+import {gettext, itemUtils} from '../../../utils';
 import {Row, TextInput, ColouredValueInput} from '../../UI/Form';
 import {AbsoluteDate} from '../..';
 
@@ -23,7 +23,7 @@ export class EditPriorityComponent extends React.Component {
     componentWillMount() {
         const priorityQcode = get(this.props, 'initialValues.priority');
         const priority = priorityQcode ?
-            getItemInArrayById(this.props.priorities, priorityQcode, 'qcode') :
+            itemUtils.getItemInArrayById(this.props.priorities, priorityQcode, 'qcode') :
             null;
 
         this.setState({priority});
@@ -55,12 +55,12 @@ export class EditPriorityComponent extends React.Component {
 
         const deskId = get(this.props, 'initialValues.assigned_to.desk') || null;
         const desk = deskId ?
-            getItemInArrayById(this.props.desks, deskId) :
+            itemUtils.getItemInArrayById(this.props.desks, deskId) :
             {};
 
         const userId = get(this.props, 'initialValues.assigned_to.user') || null;
         const user = userId ?
-            getItemInArrayById(this.props.users, userId) :
+            itemUtils.getItemInArrayById(this.props.users, userId) :
             {};
 
         const provider = get(this.props, 'initialValues.assigned_to.coverage_provider') || {};

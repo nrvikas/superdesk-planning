@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import moment from 'moment-timezone';
 import {get} from 'lodash';
-import {getCoverageIcon, getCreator} from '../../utils';
+import {planningUtils, itemUtils} from '../../utils';
 import {UserAvatar, AbsoluteDate, ItemActionsMenu} from '../../components';
 
 export const CoverageListItem = ({
@@ -14,12 +14,12 @@ export const CoverageListItem = ({
     actions,
     readOnly,
 }) => {
-    const userAssigned = getCreator(coverage, 'assigned_to.user', users);
+    const userAssigned = itemUtils.getCreator(coverage, 'assigned_to.user', users);
     const deskAssigned = desks.find((d) =>
         d._id === get(coverage, 'assigned_to.desk'));
     const coverageDate = get(coverage, 'planning.scheduled');
     const classes = classNames(
-        getCoverageIcon(get(coverage, 'planning.g2_content_type')),
+        planningUtils.getCoverageIcon(get(coverage, 'planning.g2_content_type')),
         {
             'icon--green': coverageDate && moment(coverageDate).isAfter(moment()),
             'icon--red': coverageDate && !moment(coverageDate).isAfter(moment()),

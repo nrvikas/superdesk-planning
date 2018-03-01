@@ -10,7 +10,7 @@ import {PlanningDateTime} from './';
 import {ItemActionsMenu} from '../index';
 import {PLANNING, EVENTS, WORKSPACE, MAIN} from '../../constants';
 
-import {planningUtils, getItemWorkflowStateLabel, onEventCapture} from '../../utils';
+import {planningUtils, itemUtils, onEventCapture} from '../../utils';
 
 export class PlanningItem extends React.PureComponent {
     onAddCoverageButtonClick(event) {
@@ -42,7 +42,7 @@ export class PlanningItem extends React.PureComponent {
         }
 
         const isItemLocked = planningUtils.isPlanningLocked(item, lockedItems);
-        const state = getItemWorkflowStateLabel(item);
+        const state = itemUtils.getItemWorkflowStateLabel(item);
         const event = get(item, 'event');
 
         let borderState = false;

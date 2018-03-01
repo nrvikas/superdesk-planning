@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import {ItemActionsMenu} from '../../index';
 import {Button} from '../../UI/Nav';
 import {ITEM_TYPE, EVENTS, PLANNING, WORKSPACE} from '../../../constants';
-import {getItemType, eventUtils, planningUtils} from '../../../utils';
+import {itemUtils, eventUtils, planningUtils} from '../../../utils';
 
 export const EditorItemActions = ({item, session, privileges, lockedItems, currentWorkspace, itemActions}) => {
-    const itemType = getItemType(item);
+    const itemType = itemUtils.getItemType(item);
 
     let itemActionsCallBack = {
         [EVENTS.ITEM_ACTIONS.DUPLICATE.actionName]: itemActions[EVENTS.ITEM_ACTIONS.DUPLICATE.actionName],

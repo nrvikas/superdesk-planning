@@ -1,7 +1,7 @@
 import * as selectors from '../selectors';
 import {LOCKS, ITEM_TYPE, WORKSPACE, PLANNING} from '../constants';
 import {planning, events, assignments} from './index';
-import {lockUtils, getItemType} from '../utils';
+import {lockUtils, itemUtils} from '../utils';
 
 /**
  * Action Dispatcher to load all Event and Planning locks
@@ -74,7 +74,7 @@ const unlock = (item) => (
 
 const lock = (item) => (
     (dispatch, getState) => {
-        const itemType = getItemType(item);
+        const itemType = itemUtils.getItemType(item);
         const currentWorkspace = selectors.general.currentWorkspace(getState());
         let lockAction;
 

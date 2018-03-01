@@ -2,7 +2,7 @@ import {createSelector} from 'reselect';
 import {get, sortBy, includes, isEmpty} from 'lodash';
 import moment from 'moment';
 import {AGENDA, SPIKED_STATE} from '../constants';
-import {lockUtils, isItemSpiked} from '../utils';
+import {lockUtils, itemUtils} from '../utils';
 
 export const getIngestProviders = (state) => get(state, 'ingest.providers');
 export const getAgendas = (state) => get(state, 'agenda.agendas', []);
@@ -125,11 +125,11 @@ export const getFilteredPlanningList = createSelector(
         }
 
         if (get(currentSearch, 'spikeState') === SPIKED_STATE.SPIKED) {
-            return plannings.filter((p) => isItemSpiked(p));
+            return plannings.filter((p) => itemUtils.isItemSpiked(p));
         } else if (get(currentSearch, 'spikeState') === SPIKED_STATE.BOTH) {
             return plannings;
         } else {
-            return plannings.filter((p) => !isItemSpiked(p));
+            return plannings.filter((p) => !itemUtils.isItemSpiked(p));
         }
     }
 );

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {ListItem, TimeEvent, StateLabel, Checkbox, ItemActionsMenu} from '../index';
 import './style.scss';
 import {GENERIC_ITEM_ACTIONS, EVENTS} from '../../constants';
-import {eventUtils, isItemCancelled, isItemRescheduled} from '../../utils';
+import {eventUtils, itemUtils} from '../../utils';
 import classNames from 'classnames';
 
 export const EventItem = ({
@@ -27,8 +27,8 @@ export const EventItem = ({
     session,
     addEventToCurrentAgenda,
 }) => {
-    const hasBeenCancelled = isItemCancelled(event);
-    const hasBeenRescheduled = isItemRescheduled(event);
+    const hasBeenCancelled = itemUtils.isItemCancelled(event);
+    const hasBeenRescheduled = itemUtils.isItemRescheduled(event);
     const hasPlanning = eventUtils.eventHasPlanning(event);
     const onEditOrPreview = eventUtils.canEditEvent(event, session, privileges, lockedItems) ?
         onDoubleClick : onClick;

@@ -9,8 +9,7 @@ import {StateLabel, InternalNoteLabel} from '../../components';
 
 import {
     getCoverageIcon,
-    getCreator,
-    getItemInArrayById,
+    itemUtils,
     getDateTimeString,
     gettext,
     stringUtils,
@@ -28,8 +27,8 @@ export const CoverageItem = ({
     itemActionComponent,
     isPreview
 }) => {
-    const userAssigned = getCreator(coverage, 'assigned_to.user', users);
-    const deskAssigned = getItemInArrayById(desks, get(coverage, 'assigned_to.desk'));
+    const userAssigned = itemUtils.getCreator(coverage, 'assigned_to.user', users);
+    const deskAssigned = itemUtils.getItemInArrayById(desks, get(coverage, 'assigned_to.desk'));
     const coverageDate = get(coverage, 'planning.scheduled');
     const coverageDateText = !coverageDate ? 'Not scheduled yet' :
         getDateTimeString(coverageDate, dateFormat, timeFormat);

@@ -5,7 +5,7 @@ import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import {get} from 'lodash';
 import moment from 'moment';
 
-import {getCoverageIcon, planningUtils, getItemInArrayById, gettext} from '../../utils/index';
+import {getCoverageIcon, planningUtils, itemUtils, gettext} from '../../utils/index';
 
 export const PlanningDateTime = ({item, date, timeFormat, users, desks}) => {
     const coverages = get(item, 'coverages', []);
@@ -40,8 +40,8 @@ export const PlanningDateTime = ({item, date, timeFormat, users, desks}) => {
         });
 
     const getCoverageElement = (coverage, i, withoutTime = false) => {
-        const user = getItemInArrayById(users, get(coverage, 'assigned_to.user'));
-        const desk = getItemInArrayById(desks, get(coverage, 'assigned_to.desk'));
+        const user = itemUtils.getItemInArrayById(users, get(coverage, 'assigned_to.user'));
+        const desk = itemUtils.getItemInArrayById(desks, get(coverage, 'assigned_to.desk'));
         const timeSuffix = withoutTime ? null :
             (<span key={1}>: {moment(coverage.planning.scheduled).format(timeFormat)} </span>);
         const assignmentStr = desk ? 'Desk: ' + desk.name : 'Unassigned';

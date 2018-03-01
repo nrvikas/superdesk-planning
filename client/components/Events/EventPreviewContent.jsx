@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {gettext, getCreator} from '../../utils';
+import {gettext, itemUtils} from '../../utils';
 import * as selectors from '../../selectors';
 import {get} from 'lodash';
 import {Row} from '../UI/Preview';
@@ -51,8 +51,8 @@ export class EventPreviewContentComponent extends React.Component {
             createUploadLink,
             streetMapUrl
         } = this.props;
-        const createdBy = getCreator(item, 'original_creator', users);
-        const updatedBy = getCreator(item, 'version_creator', users);
+        const createdBy = itemUtils.getCreator(item, 'original_creator', users);
+        const updatedBy = itemUtils.getCreator(item, 'version_creator', users);
         const creationDate = get(item, '_created');
         const updatedDate = get(item, '_updated');
         const versionCreator = get(updatedBy, 'display_name') ? updatedBy :

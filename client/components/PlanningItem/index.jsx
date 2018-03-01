@@ -7,7 +7,7 @@ import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import classNames from 'classnames';
 import {GENERIC_ITEM_ACTIONS, EVENTS, PLANNING, WORKSPACE} from '../../constants';
 import './style.scss';
-import {getCoverageIcon, planningUtils, isItemCancelled, isItemRescheduled} from '../../utils/index';
+import {getCoverageIcon, planningUtils, itemUtils} from '../../utils/index';
 import {getCurrentAgendaId} from '../../selectors';
 
 
@@ -50,8 +50,8 @@ const PlanningItem = ({
     const isScheduled = some(coverages, (c) => (get(c, 'planning.scheduled')));
     const notForPublication = item ? get(item, 'flags.marked_for_not_publication', false) : false;
 
-    const isCancelled = isItemCancelled(item);
-    const isRescheduled = isItemRescheduled(item);
+    const isCancelled = itemUtils.isItemCancelled(item);
+    const isRescheduled = itemUtils.isItemRescheduled(item);
 
     const onEditOrPreview = planningUtils.canEditPlanning(item, event, session, privileges, lockedItems) ?
         onDoubleClick : onClick;

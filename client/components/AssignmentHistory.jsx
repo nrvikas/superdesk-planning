@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {get, includes, isEqual} from 'lodash';
 import {AbsoluteDate} from './index';
-import {getItemInArrayById, gettext} from '../utils';
+import {itemUtils, gettext} from '../utils';
 import * as actions from '../actions';
 import * as selectors from '../selectors';
 
@@ -34,7 +34,7 @@ class AssignmentHistoryComponent extends React.Component {
 
 
     render() {
-        const getHistoryActionUserName = (userId) => getItemInArrayById(this.props.users, userId).display_name;
+        const getHistoryActionUserName = (userId) => itemUtils.getItemInArrayById(this.props.users, userId).display_name;
         const allowedOperations = ['create', 'update', 'unlink', 'start_working', 'complete',
             'content_link', 'cancelled', 'submitted', 'spike_unlink', 'revert'];
 

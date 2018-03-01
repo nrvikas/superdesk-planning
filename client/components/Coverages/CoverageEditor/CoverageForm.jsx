@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {get} from 'lodash';
-import {getItemInArrayById, gettext, planningUtils} from '../../../utils';
+import {itemUtils, gettext, planningUtils} from '../../../utils';
 import {COVERAGES, WORKSPACE} from '../../../constants';
 
 
@@ -80,7 +80,7 @@ export class CoverageForm extends React.Component {
         } = this.props;
 
         const contentTypeQcode = get(value, 'planning.g2_content_type') || null;
-        const contentType = contentTypeQcode ? getItemInArrayById(contentTypes, contentTypeQcode, 'qcode') : null;
+        const contentType = contentTypeQcode ? itemUtils.getItemInArrayById(contentTypes, contentTypeQcode, 'qcode') : null;
         const onContentTypeChange = (f, v) => onChange(f, get(v, 'qcode') || null);
         const isExistingCoverage = !!value.coverage_id;
         const assignmentState = get(value, 'assigned_to.state');

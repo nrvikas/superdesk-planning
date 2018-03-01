@@ -9,7 +9,7 @@ import {
     checkPermission,
     getErrorMessage,
     lockUtils,
-    isItemSpiked,
+    itemUtils,
     isItemRescheduled,
     dispatchUtils,
     gettext,
@@ -72,7 +72,7 @@ const _openEventDetails = (event) => (
                         return Promise.resolve(eventInState);
                     }
 
-                    if (isItemSpiked(eventInState)) {
+                    if (itemUtils.isItemSpiked(eventInState)) {
                         dispatch(self.previewEvent(event));
                         return Promise.resolve(eventInState);
                     }
@@ -433,7 +433,7 @@ const rescheduleEvent = (event) => (
 
                 const duplicatedEvent = get(updatedEvent, 'reschedule_to');
 
-                if (isItemRescheduled(updatedEvent) && duplicatedEvent) {
+                if (itemUtils.isItemRescheduled(updatedEvent) && duplicatedEvent) {
                     return dispatch(eventsApi.fetchById(duplicatedEvent))
                         .then(
                             (newEvent) => dispatch(main.lockAndEdit(newEvent)),
