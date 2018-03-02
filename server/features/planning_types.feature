@@ -6,7 +6,7 @@ Feature: Planning Types
       When we get "/planning_types"
       Then we get existing resource
       """
-      { "_items": [{ "name": "events", "editor": {
+      { "_items": [{ "name": "event", "editor": {
           "slugline": {"enabled": true}},"schema": {
           "slugline": {"minlength": null, "required": false, "type": "string", "maxlength": null}}
       }
@@ -29,7 +29,7 @@ Feature: Planning Types
       When we get "/planning_types"
       Then we get existing resource
       """
-      { "_items": [{ "name": "events", "editor": {
+      { "_items": [{ "name": "event", "editor": {
           "slugline": {"enabled": true}}
        },{ "name": "planning", "editor": {
           "slugline": {"enabled": false}}
@@ -93,7 +93,7 @@ Feature: Planning Types
               "enabled": true
             }
           },
-          "name": "events",
+          "name": "event",
           "schema":
           {
             "anpa_category": {
@@ -380,7 +380,7 @@ Feature: Planning Types
               "enabled": true
             }
           },
-          "name": "events",
+          "name": "event",
           "schema":
           {
             "anpa_category": {
