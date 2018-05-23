@@ -58,7 +58,6 @@ before_script: >
     && curl -XPUT 'http://localhost:9200/_snapshot/backups' -d '{"type": "fs", "settings": {"location": "/tmp/es-backups"}}'
 
 script:
-    - grunt ci:travis
     - grunt build ;
       cd dist ;
       while [ ! -f index.html ]; do sleep .5; done ;
