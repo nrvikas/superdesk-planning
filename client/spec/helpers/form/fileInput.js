@@ -17,14 +17,13 @@ export class FileInput {
         // Return a promise once all the files have been set
         return Promise.all(
             [map(values, (filePath) => this.addFile(filePath)),
-            waitPresent(this.row)]
+                waitPresent(this.row)]
         );
     }
 
     addFile(filePath) {
         return waitPresent(this.row).then(() => {
             const absolutePath = path.resolve(__dirname, filePath);
-            console.log('adding: ' + absolutePath)
 
             // Make the file input element visible so that protractor can
             // set the file location
